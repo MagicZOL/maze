@@ -27,6 +27,8 @@ public class GameController : MonoBehaviour
     //GameController 싱글톤
     private static GameController instance = null;
 
+    int indexa=1;
+
     //GameController 싱글톤 프로퍼티
     public static GameController Instance
     {
@@ -71,8 +73,6 @@ public class GameController : MonoBehaviour
 
         //FindPath로 찾은 경로를 받음
         pathList = AStar.FindPath(startNode, endNode);
-
-        Test();
     }
 
     private void InitNodes()
@@ -259,41 +259,31 @@ public class GameController : MonoBehaviour
     {
         if (pathList != null && pathList.Count > 0)
         {
-            int index = 1;
-
-            foreach (Node node in pathList)
+            if (indexa < pathList.Count)
             {
-                if (index < pathList.Count)
-                {
-                    Node next = (Node)pathList[index];
+                Node next = (Node)pathList[indexa];
+                float duration = Time.deltaTime * 2.5f;
+                startTransform.position = Vector3.Lerp(startTransform.position, next.position, duration);
 
-                    float dis = Vector3.Distance(startTransform.position, next.position);
-
-                    if(dis > 0)
-                    { 
-                        StartCoroutine(MoveCube(startTransform.position, next.position));
-                        dis = Vector3.Distance(startTransform.position, next.position);
-                    }
-
-                    if (dis <= 0.1f)
-                    {
-                        index++;
-                    }
-                }
+                float dis = Vector3.Distance(startTransform.position, next.position);
+                if (dis < 0.1f)
+                    indexa++;
             }
         }
     }
-
+    private void Update()
+    {
+        Test();
+    }
     IEnumerator MoveCube(Vector3 startPos, Vector3 nextPos)
     {
-        float currentTime = 0f;
         float duration = Time.deltaTime * 2.5f;
+        float dis = Vector3.Distance(startTransform.position, nextPos);
 
-        while (currentTime <= duration)
+        while (dis > 0)
         {
             startTransform.position = Vector3.Lerp(startPos, nextPos, duration);
 
-            currentTime += Time.deltaTime;
             yield return null;
         }
     }
