@@ -255,14 +255,14 @@ public class GameController : MonoBehaviour
         }
     }
 
-    void Test()
+    void MoveCube()
     {
         if (pathList != null && pathList.Count > 0)
         {
             if (indexa < pathList.Count)
             {
                 Node next = (Node)pathList[indexa];
-                float duration = Time.deltaTime * 2.5f;
+                float duration = Time.deltaTime * 20f;
                 startTransform.position = Vector3.Lerp(startTransform.position, next.position, duration);
 
                 float dis = Vector3.Distance(startTransform.position, next.position);
@@ -273,18 +273,6 @@ public class GameController : MonoBehaviour
     }
     private void Update()
     {
-        Test();
-    }
-    IEnumerator MoveCube(Vector3 startPos, Vector3 nextPos)
-    {
-        float duration = Time.deltaTime * 2.5f;
-        float dis = Vector3.Distance(startTransform.position, nextPos);
-
-        while (dis > 0)
-        {
-            startTransform.position = Vector3.Lerp(startPos, nextPos, duration);
-
-            yield return null;
-        }
+        MoveCube();
     }
 }
